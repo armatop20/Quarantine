@@ -1,0 +1,29 @@
+int speed = 100;                        //integers for motor speeds 
+int slow_speed = 50;
+int l_motor = 1;                        //integers for motor ports 
+int r_motor = 3;
+int l_bump = 10;                        //integers for bumper ports 
+int r_bump = 12;  
+
+void forward() {
+	motor(l_motor, speed);                //function to make robot move forward with both motors 
+	motor(r_motor, speed);
+}
+
+void turn_right() {
+	motor(l_motor, slow_speed);           //function to make robot turn right by having only the left motor move
+}
+
+int main (){
+	while (digital(r_bump)==0) {          //the robot moves forward while the right bumper is not activated
+		forward();                          //forward movement of the robot 
+		if (digital(r_bump)==1){            //once the right bumper is activated, the robot stops moving forward 
+			break;                            //the code breaks out of the while loop and goes into the next one 
+		}
+	}
+	ao();                                 //everything is turned off to reset its motion
+	while (digital(l_bump)==0){           //while the left bumper is not activated, the robot will turn right and then stop once it is activated
+		turn_right();                       //right turn of the robot
+	}
+	return 0;
+}
