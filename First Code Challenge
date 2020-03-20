@@ -1,9 +1,9 @@
 int speed = 100;                        //integers for motor speeds 
 int slow_speed = 17;
-int l_motor = 1;                        //integers for motor ports 
-int r_motor = 3;
-int l_bump = 10;                        //integers for bumper ports 
-int r_bump = 12;  
+int l_motor = 0;                        //integers for motor ports 
+int r_motor = 2;
+int l_bump = 8;                        //integers for bumper ports 
+int r_bump = 9;  
 
 void forward() {
 	motor(l_motor, speed);                //function to make robot move forward with both motors 
