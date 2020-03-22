@@ -1,0 +1,49 @@
+int speed = 40;							//integers for motor speeds
+int slow_speed = 1;
+int mid_speed = 20;
+int left_motor = 0;						//integers for motor ports
+int right_motor = 2;
+int left_bumper = 8;					//integers for bumper ports 
+int right_bumper = 9;
+int left_sensor = 5;					//integers for sensor ports 
+
+void go() {
+	motor(left_motor, speed);			//function to make robot drive forward 
+	motor(right_motor, speed);
+}
+
+void turn_right() {						//function to make robot make a right turn 
+	motor(left_motor, speed);
+	motor(right_motor, -slow_speed);
+	msleep(300);
+}
+
+void turn_left() {						//function to make robot make a left turn
+	motor(left_motor, -slow_speed);
+	motor(right_motor, speed);
+	msleep(300);
+}
+
+void adjust() {						//function to make robot make a big right turn at the start
+	motor(left_motor, speed);
+	motor(right_motor, mid_speed);
+	msleep(2000);
+}
+
+int main (){
+	adjust();
+	while(digital(left_bumper)==0){		//the robot goes through the loop while the left bumper is inactivated
+		go();
+		if(analog(left_sensor) > 15){	//the robot makes a right turn when the left reflectance sensor sees the black line
+			turn_right();
+		}
+		if(digital(right_bumper) == 1){	//the robot makes a left turn when the right bumper is activated 
+			turn_left();
+		}
+		if(digital(left_bumper)==1){	//the code breaks out of the while loop when the left bumper is activated 
+			break;				
+		}
+	}
+	ao();								//everything is turned off to reset the robot's motion
+	return 0;
+}
