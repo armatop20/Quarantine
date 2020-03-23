@@ -1,0 +1,59 @@
+// Created on Sun March 22 2020
+int high_speed = 60;
+int speed = 40;							//integers for motor speeds
+int mid_speed = 20;
+int left_motor = 0;						//integers for motor ports
+int right_motor = 2;
+int left_bumper = 8;					//integers for bumper ports 
+int right_bumper = 9;
+int left_sensor = 5;					//integer for reflectance sensor port
+
+void go() {
+	motor(left_motor, high_speed);			//function to make robot drive forward 
+	motor(right_motor, high_speed);
+}
+
+void turn_right() {						//function to make robot make a slight right turn 
+	motor(left_motor, speed);
+	motor(right_motor, 0);
+	msleep(300);
+}
+
+void turn_left() {						//function to make robot make a lbig eft turn
+	motor(left_motor, -speed);
+	motor(right_motor, speed);
+	msleep(1150);
+}
+
+void adjust() {						//function to make robot make a big right turn at the start to get straight
+	motor(left_motor, speed);
+	motor(right_motor, mid_speed);
+	msleep(1000);
+}
+
+void backup() {						//function to make robot make a small move backward 
+	motor(left_motor, -mid_speed);
+	motor(right_motor, -mid_speed);
+	msleep(800);
+}
+
+int main()
+{
+	adjust();						//the robot starts by making a big right turn to adjust and straighten out 
+	while(digital(left_bumper)==0){	//while the left bumper is inactivated, the robot goes through the loop
+		go();										//the robot moving forward 
+		if(analog(left_sensor) > 500){	//the robot makes a right turn when the left reflectance sensor sees the black line
+			turn_right();
+		}
+		if(digital(left_bumper)==1){	//the code breaks out of the while loop when the left bumper is activated 
+			break;				
+		}
+		if(digital(right_bumper)==1){	//the code breaks out of the while loop when the right bumper is activated 
+			break;				
+		}
+	}
+	backup();			//after the code breaks out of the while loop it backs up and makes a right turn using msleeps
+	turn_left();
+	printf("Hello, World!\n");
+	return 0;
+}
