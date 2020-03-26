@@ -1,4 +1,4 @@
-// Created on Sun March 22 2020
+// Created on Sun March 26 2020
 int high_speed = 60;
 int speed = 40;							//integers for motor speeds
 int mid_speed = 20;
