@@ -1,0 +1,112 @@
+// Created on Sun March 30 2020
+int high_speed = 60;
+int speed = 40;							//integers for motor speeds
+int mid_speed = 20;
+int left_motor = 0;						//integers for motor ports
+int right_motor = 2;
+int left_bumper = 8;					//integers for bumper ports 
+int right_bumper = 9;
+int left_sensor = 5;					//integer for reflectance sensor port
+int right_sensor = 6;
+
+void go() {
+	motor(left_motor, high_speed);			//function to make robot drive forward 
+	motor(right_motor, high_speed);
+}
+
+void turn_right() {						//function to make robot make a slight right turn 
+	motor(left_motor, speed);
+	motor(right_motor, 0);
+	msleep(300);
+}
+
+void turn_left() {						//function to make robot make a slight left turn 
+	motor(left_motor, 0);
+	motor(right_motor, speed);
+	msleep(300);
+}
+
+void big_left() {						//function to make robot make a big left turn
+	motor(left_motor, -speed);
+	motor(right_motor, speed);
+	msleep(1150);
+}
+
+void adjust() {						//function to make robot make a big right turn at the start to get straight
+	motor(left_motor, speed);
+	motor(right_motor, mid_speed);
+	msleep(1000);
+}
+
+void backup() {						//function to make robot make a small move backward 
+	motor(left_motor, -mid_speed);
+	motor(right_motor, -mid_speed);
+	msleep(800);
+}
+
+void backup2() {						//function to make robot make a small move backward 
+	motor(left_motor, -mid_speed);
+	motor(right_motor, -mid_speed);
+	msleep(2500);
+}
+
+void turn_left2() {						//function to make robot make a slight left turn 
+	motor(left_motor, 0);
+	motor(right_motor, speed);
+	msleep(2500);
+}
+
+void find_line(){						//function to make robot find the black line 
+	while(analog(left_sensor) < 700){
+		go();
+	}
+}
+
+int main()
+{
+	adjust();						//the robot starts by making a big right turn to adjust and straighten out 
+	while(digital(left_bumper)==0){	//while the left bumper is inactivated, the robot goes through the loop
+		go();										//the robot moving forward 
+		if(analog(left_sensor) > 400){	//the robot makes a right turn when the left reflectance sensor sees the black line
+			turn_right();
+		}
+		if(digital(left_bumper)==1){	//the code breaks out of the while loop when the left bumper is activated 
+			break;				
+		}
+		if(digital(right_bumper)==1){	//the code breaks out of the while loop when the right bumper is activated 
+			break;				
+		}
+	}
+	backup();			//after the code breaks out of the while loop it backs up and makes a left turn using msleeps
+	big_left();
+	find_line();			//once the robot turns it drives straight until it finds the black line 
+	while(digital(left_bumper)==0){			//while the left bumper is inactivated, the robot goes through the loop
+		if(analog(left_sensor) > 700){	//the robot makes a right turn when the left reflectance sensor sees the black line
+			turn_right();
+		}
+		if(analog(left_sensor) < 700){	//the robot makes a left turn when the left reflectance sensor doesn't see the black line
+			turn_left();
+		}
+		if(digital(left_bumper)==1){	//the code breaks out of the while loop when the left bumper is activated 
+			break;			
+		}
+		if(digital(right_bumper)==1){	//the code breaks out of the while loop when the right bumper is activated 
+			break;			
+		}
+		ao();		//everything it turned off to reset the robot's motion
+	}
+	backup2();	//the robot backs up after the code breaks out of the loop
+	turn_left2();	//the robot makes a wide turn to the left to straighten out towards the new objective 
+	while(analog(left_sensor) < 400){	//while the left sensor doesn't see the black line 
+	go();												//the robot moves forward
+	if(digital(left_bumper)==1){			//if the left bumper is activated the robot will make a slight turn right
+	turn_right();
+	}
+	if(digital(right_bumper)==1){			//if the right bumper is activated the robot will make a slight turn left
+	turn_left();
+	}
+	}
+	ao();						//everything is turned off to reset the robot's motion
+	printf("Hello, World!\n");
+	return 0;
+}
