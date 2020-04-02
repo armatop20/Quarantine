@@ -1,0 +1,66 @@
+// Created on Thu April 2 2020
+int high_speed = 60;
+int speed = 40;							//integers for motor speeds
+int mid_speed = 20;
+int slow_speed = 10;
+int left_motor = 0;						//integers for motor ports
+int right_motor = 2;
+int left_bumper = 8;					//integers for bumper ports 
+int right_bumper = 9;
+int left_sensor = 5;					//integer for reflectance sensor port
+int right_sensor = 6;
+int right_distance = 1;				//integer for right distance sensor
+int counter = 0;							//integer for counter
+
+void go() {
+	motor(left_motor, high_speed);			//function to make robot drive forward 
+	motor(right_motor, high_speed);
+}
+
+void turn_left() {						//function to make robot make a slight left turn 
+	motor(left_motor, 0);
+	motor(right_motor, high_speed);
+	msleep(200);
+}
+
+void turn_right() {						//function to make robot make a slight right turn 
+	motor(left_motor, high_speed);
+	motor(right_motor, 0);
+	msleep(300);
+}
+
+void adjust() {						//function to make robot make a big right turn at the start to get straight
+	motor(left_motor, speed);
+	motor(right_motor, slow_speed);
+	msleep(2300);
+}
+
+void move_forward() {		//function to make roobot move forward after seeing the fourth black line
+	motor(left_motor, speed);
+	motor(right_motor, speed);
+	msleep(2000);
+}
+
+int main()
+{
+	adjust();
+	while(counter < 5){						//while the counter is below 5, the robot follows the loop
+		go();											//the robot drives straight
+		if(analog(right_distance) <  350){		//the right distance sensor turns left if it is too close to the wall
+			turn_left();
+		}
+		if(analog(right_distance) >  350){		//the right distance sensor turns right if it is too far from the wall 
+			turn_right();
+		}
+		if(analog(right_sensor) > 500){	//if the right reflentance sensor sees a black line it adds +1 to the counter
+			counter = counter + 1;
+		}
+		if(counter == 4){				//if the counter adds up to 4, the code will break out of the while loop 
+			break;
+		}
+	}
+	move_forward();					//once the robot exits the loop, it will drive forward into the corner 
+	ao();									//everything is turned off to reset the robot's motion
+	printf("Hello, World!\n");
+	return 0;
+}
