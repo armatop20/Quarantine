@@ -1,0 +1,52 @@
+// Created on Mon April 6 2020
+int high_speed = 60;
+int speed = 40;							//integers for motor speeds
+int mid_speed = 20;
+int slow_speed = 10;
+int left_motor = 0;						//integers for motor ports
+int right_motor = 2;
+int challenge;
+
+void forward() {
+	motor(left_motor, high_speed);			//function to make robot drive forward 
+	motor(right_motor, high_speed);
+	msleep(1000);
+}
+
+void reverse() {
+	motor(left_motor, -high_speed);			//function to make robot drive forward 
+	motor(right_motor, -high_speed);
+	msleep(1000);
+}
+
+void turn_left() {						//function to make robot make a slight left turn 
+	motor(left_motor, 0);
+	motor(right_motor, high_speed);
+	msleep(1000);
+}
+
+void turn_right() {						//function to make robot make a slight right turn 
+	motor(left_motor, high_speed);
+	motor(right_motor, 0);
+	msleep(1000);
+}
+
+void go() {								//function to make robot go straight and then turn right 
+	forward();
+	turn_right();
+}
+
+void back() {							//function to make robot go back and then turn left
+	reverse();
+	turn_left();
+}
+
+int main()
+{
+	for(challenge=1; challenge<=6; challenge++){		//the loop repeats until it's dont it 6 times 
+		go();
+		back();
+		printf("Challenge is %d \n", challenge);					//every time the loop repeats, the printf is displayed and +1 is added to %d
+	}
+	return 0;
+}
